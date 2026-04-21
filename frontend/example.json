@@ -1,0 +1,23 @@
+{
+    "idea": "me gustaria crear algo re copado",
+    "industria": "Tecnología",
+    "personalidad": [
+        "Divertida",
+        "Elegante",
+        "Tradicional"
+    ],
+    "comunicacion": [
+        "Inspirador",
+        "Técnico"
+    ],
+    "estilo": [
+        "Minimalista",
+        "Artesanal"
+    ],
+    "publico": [
+        "Adultos",
+        "Niños",
+        "Ancianos"
+    ],
+    "diferencial": "algo me diferencia"
+}
