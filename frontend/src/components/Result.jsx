@@ -13,10 +13,6 @@ function Result() {
     const id = state?.id || params.get("id");
 
     useEffect(() => {
-        window.scrollTo(0, 0);
-    }, []);
-
-    useEffect(() => {
         // Señal por defecto: el contenido aún no está listo para PDF.
         window.__PDF_READY__ = false;
     }, []);
