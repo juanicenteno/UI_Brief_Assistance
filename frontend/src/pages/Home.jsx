@@ -64,7 +64,7 @@ function Home() {
         setLoading(true);
 
         try {
-            const response = await axios.post("http://localhost:4000/api/generar", formData);
+            const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/generar`, formData);
             navigate("/resultado", { state: response.data });
         } catch (err) {
             console.error(err);

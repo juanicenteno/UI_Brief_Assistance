@@ -20,7 +20,7 @@ function Result() {
     useEffect(() => {
         // Si no hay state (ej: Puppeteer), busca el brief por ID
         if (!brief && id) {
-            fetch(`http://localhost:4000/api/brief/${id}`)
+            fetch(`${import.meta.env.VITE_API_URL}/api/brief/${id}`)
                 .then(r => r.json())
                 .then(data => setBrief(data))
                 .catch(() => navigate('/'));
@@ -67,7 +67,7 @@ function Result() {
             alert("No se encontró el ID del brief para generar el PDF.");
             return;
         }
-        window.open(`http://localhost:4000/api/generar-pdf?id=${id}`);
+        window.open(`${import.meta.env.VITE_API_URL}/api/generar-pdf?id=${id}`);
     };
 
     return (
@@ -82,11 +82,11 @@ function Result() {
                 <h2 className="gradient">Identidad visual</h2>
                 <div className="container_imgs result-images-grid">
                     <figure className="result-image-frame">
-                        <img src={`http://localhost:4000${logoUrl}`} alt="Logo de marca" />
+                        <img src={`${import.meta.env.VITE_API_URL}${logoUrl}`} alt="Logo de marca" />
                         <figcaption>Logo</figcaption>
                     </figure>
                     <figure className="result-image-frame">
-                        <img src={`http://localhost:4000${mockupUrl}`} alt="Mockup de marca" />
+                        <img src={`${import.meta.env.VITE_API_URL}${mockupUrl}`} alt="Mockup de marca" />
                         <figcaption>Mockup</figcaption>
                     </figure>
                 </div>
