@@ -5,6 +5,8 @@ const crypto = require('crypto');
 const pool = require("./db");
 const fs = require("fs");
 const path = require("path");
+const handlebars = require("handlebars");
+const flags = require("emoji-flags");
 
 require('dotenv').config();
 
@@ -168,6 +170,10 @@ FORMATO EXACTO DEL JSON A ENTREGAR:
     }
 });
 
+const templatePath = path.join(__dirname, "templates", "brief-template.html");
+const templateSource = fs.readFileSync(templatePath, "utf8");
+const compileTemplate = handlebars.compile(templateSource);
+
 app.get('/api/generar-pdf', async (req, res) => {
     const { id } = req.query;
 
@@ -177,48 +183,53 @@ app.get('/api/generar-pdf', async (req, res) => {
 
     let browser;
     try {
-        const [rows] = await pool.query("SELECT id FROM briefs WHERE id = ?", [id]);
+        const [rows] = await pool.query("SELECT data FROM briefs WHERE id = ?", [id]);
 
         if (rows.length === 0) {
             return res.status(404).send("No se encontró el brief");
         }
 
+        const brief = JSON.parse(rows[0].data);
+
+        const country = flags.data.find(
+            (c) => c.name.toLowerCase() === brief.persona.country.toLowerCase()
+        );
+
+        const fontsPrepared = brief.fonts.map((f) => ({
+            ...f,
+            fontUrl: f.font.replace(/ /g, "+"),
+        }));
+
+        const htmlData = {
+            name: brief.name,
+            description: brief.description,
+            logoUrl: `${req.protocol}://${req.get("host")}${brief.logo_url}`,
+            mockupUrl: `${req.protocol}://${req.get("host")}${brief.mockup_url}`,
+            fonts: fontsPrepared,
+            colors: brief.colors,
+            persona: brief.persona,
+            personaAvatar: `${req.protocol}://${req.get("host")}${brief.persona.sex === "masculino" ? "/upm.png" : "/upf.png"}`,
+            personaFlag: country?.code ? `https://flagcdn.com/w40/${country.code.toLowerCase()}.png` : null,
+        };
+
+        const html = compileTemplate(htmlData);
+
         browser = await puppeteer.launch({
             headless: true,
             args: ['--no-sandbox', '--disable-setuid-sandbox'],
         });
+
         const page = await browser.newPage();
-        page.setDefaultNavigationTimeout(60000);
-        page.setDefaultTimeout(60000);
-
-        page.on("console", (msg) => {
-            console.log("🖥️ [frontend]", msg.text());
-        });
-        page.on("pageerror", (err) => {
-            console.error("🧨 [frontend error]", err.message);
-        });
-
-        await page.goto(`http://localhost:5173/resultado?id=${id}`, {
-            waitUntil: "domcontentloaded",
-            timeout: 60000,
-        });
-        
-        // Modo "como imprimir en navegador": da tiempo a hidratar/fetch y sigue.
-        await page.waitForSelector("body", { timeout: 15000 });
-        await page.waitForFunction(() => document.readyState === "complete", { timeout: 15000 });
-        await new Promise((resolve) => setTimeout(resolve, 5000));
-
-        // Hace match visual con la vista de pantalla del navegador.
-        await page.emulateMediaType("screen");
+        await page.setContent(html, { waitUntil: "networkidle0" });
 
         const pdfBuffer = await page.pdf({
             format: "A4",
             printBackground: true,
             preferCSSPageSize: true,
             margin: {
-                top: "12mm",
+                top: "10mm",
                 right: "10mm",
-                bottom: "12mm",
+                bottom: "10mm",
                 left: "10mm",
             },
         });

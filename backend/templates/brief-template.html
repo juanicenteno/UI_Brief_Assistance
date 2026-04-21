@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brief - {{name}}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    {{#each fonts}}
+    <link href="https://fonts.googleapis.com/css2?family={{fontUrl}}:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+    {{/each}}
+    <style>
+        :root {
+            --bg-dark: #141519;
+            --bg-card: rgba(16, 17, 22, 0.72);
+            --border-subtle: rgba(255, 255, 255, 0.1);
+            --accent-cyan: #00c4cc;
+            --accent-purple: #7d2ae8;
+            --text-white: #ffffff;
+            --text-muted: rgba(255, 255, 255, 0.72);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-white);
+            line-height: 1.5;
+            padding: 2rem;
+        }
+
+        .gradient {
+            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .card {
+            border: 1px solid var(--border-subtle);
+            border-radius: 20px;
+            background: var(--bg-card);
+            box-shadow: 0 18px 42px rgba(0, 0, 0, 0.28);
+            padding: 1.6rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .chip {
+            width: fit-content;
+            margin-bottom: 0.75rem;
+            border-radius: 999px;
+            border: 1px solid rgba(0, 196, 204, 0.45);
+            color: #cbfbfd;
+            padding: 0.3rem 0.75rem;
+            font-size: 12px;
+        }
+
+        h1 {
+            font-size: 24px;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .description {
+            color: var(--text-muted);
+            font-size: 15px;
+        }
+
+        h2 {
+            font-size: 18px;
+            margin-bottom: 1rem;
+        }
+
+        .images-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .image-frame {
+            padding: 0.75rem;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: rgba(255, 255, 255, 0.02);
+            text-align: center;
+        }
+
+        .image-frame img {
+            width: 100%;
+            max-height: 280px;
+            object-fit: contain;
+        }
+
+        .image-frame figcaption {
+            margin-top: 0.55rem;
+            color: var(--text-muted);
+            font-size: 13px;
+        }
+
+        .fonts-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.8rem;
+        }
+
+        .font-item {
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 0.9rem;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .font-name {
+            font-size: 14px;
+            font-style: italic;
+            opacity: 0.8;
+            margin-bottom: 0.25rem;
+        }
+
+        .font-example {
+            font-size: 20px;
+        }
+
+        .colors-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.7rem;
+        }
+
+        .color-swatch {
+            border-radius: 10px;
+            padding: 0.75rem;
+            min-height: 70px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .persona-section {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .persona-part1 {
+            flex: 1;
+        }
+
+        .persona-part2 {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .persona-avatar {
+            width: 5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .persona-name {
+            font-size: 22px;
+            font-weight: 500;
+            color: #ffb6c1;
+            margin-bottom: 0.5rem;
+        }
+
+        .persona-details p {
+            font-size: 13px;
+            margin-bottom: 0.25rem;
+            color: var(--text-muted);
+        }
+
+        .persona-details strong {
+            color: var(--text-white);
+        }
+
+        .persona-country {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 0.5rem 0;
+        }
+
+        .persona-country img {
+            width: 28px;
+            border-radius: 6px;
+        }
+
+        .persona-list {
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 1rem;
+            background: linear-gradient(#18191b, #18191b) padding-box, linear-gradient(90deg, rgba(0, 196, 204, 0.6), rgba(125, 42, 232, 0.6)) border-box;
+        }
+
+        .persona-list p {
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-white);
+        }
+
+        .persona-list ul {
+            list-style: none;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .persona-list li {
+            margin-bottom: 0.25rem;
+            padding-left: 1rem;
+            position: relative;
+        }
+
+        .persona-list li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: var(--accent-cyan);
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-subtle);
+            color: var(--text-muted);
+            font-size: 11px;
+        }
+
+        @media print {
+            body {
+                background: white;
+                color: black;
+            }
+            .card {
+                box-shadow: none;
+                border: 1px solid #ddd;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <p class="chip">Brief generado con IA</p>
+        <h1 class="gradient">{{name}}</h1>
+        <p class="description">{{description}}</p>
+    </div>
+
+    <div class="card">
+        <h2 class="gradient">Identidad visual</h2>
+        <div class="images-grid">
+            <figure class="image-frame">
+                <img src="{{logoUrl}}" alt="Logo de marca">
+                <figcaption>Logo</figcaption>
+            </figure>
+            <figure class="image-frame">
+                <img src="{{mockupUrl}}" alt="Mockup de marca">
+                <figcaption>Mockup</figcaption>
+            </figure>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2 class="gradient">Tipografías</h2>
+        <div class="fonts-grid">
+            {{#each fonts}}
+            <div class="font-item">
+                <p class="font-name">{{font}}</p>
+                <p class="font-example" style="font-family: '{{font}}', sans-serif; font-style: italic;">
+                    The quick brown fox jumps over the lazy dog
+                </p>
+            </div>
+            {{/each}}
+        </div>
+    </div>
+
+    <div class="card">
+        <h2 class="gradient">Paleta de colores</h2>
+        <div class="colors-grid">
+            {{#each colors}}
+            <div class="color-swatch" style="background-color: {{hex}};">
+                <span>{{hex}}</span>
+            </div>
+            {{/each}}
+        </div>
+    </div>
+
+    <div class="card">
+        <h2 class="gradient">User Persona</h2>
+        <div class="persona-section">
+            <div class="persona-part1">
+                <img class="persona-avatar" src="{{personaAvatar}}" alt="Avatar">
+                <p class="persona-name">{{persona.name}}</p>
+                <div class="persona-details">
+                    <p>Edad: <strong>{{persona.age}}</strong></p>
+                    <p>Estudios: <strong>{{persona.education}}</strong></p>
+                    <p>Situación: <strong>{{persona.situacion}}</strong></p>
+                    <p>Ocupación: <strong>{{persona.ocupation}}</strong></p>
+                    <div class="persona-country">
+                        <p>País de residencia: {{persona.country}}</p>
+                        {{#if personaFlag}}
+                        <img src="{{personaFlag}}" alt="Bandera">
+                        {{/if}}
+                    </div>
+                    <p>Hijos: <strong>{{persona.hijos}}</strong></p>
+                </div>
+            </div>
+            <div class="persona-part2">
+                <div class="persona-list">
+                    <p>Motivaciones</p>
+                    <ul>
+                        {{#each persona.motivations}}
+                        <li>{{this}}</li>
+                        {{/each}}
+                    </ul>
+                </div>
+                <div class="persona-list">
+                    <p>Frustraciones</p>
+                    <ul>
+                        {{#each persona.frustrations}}
+                        <li>{{this}}</li>
+                        {{/each}}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        Generado por BriefAssist
+    </div>
+</body>
+</html>
